@@ -1,5 +1,4 @@
 from random import random
-from turtle import color
 import streamlit as st
 import requests
 import pandas as pd
@@ -103,7 +102,7 @@ opcion_grupo = st.sidebar.selectbox(label= "selecciona un GRUPO", options= otras
 def pie_simple(df: pd.DataFrame, x: pd.DataFrame, y, grupo_filter: str):
     data = df.copy()
     data = data[data["GENERO"] == grupo_filter]
-    fig = px.bar(df, x=x, y=y, color=['green', 'blue', 'yellow'], title=opcion_y)
+    fig = px.bar(df, x=x, y=y, title=opcion_y)
     return fig, data
 
 pl, c = pie_simple(datos_agrupados,opcion_y,  "CANTIDAD",  opcion_grupo)
