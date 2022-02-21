@@ -102,6 +102,8 @@ with col1:
 with col2:
     st.dataframe(d)  
 
+
+
 st.sidebar.markdown("---")
 
 otra_variable = list(datoagrupado.columns)
@@ -112,7 +114,7 @@ otra_variable.pop(otra_variable.index('ARMAS MEDIOS'))
 otra_variable.pop(otra_variable.index('GRUPO ETARIO'))
 otra_variable.pop(otra_variable.index('MES'))
 otra_variable.pop(otra_variable.index('DIA'))
-opcion_y=st.sidebar.radio(label="selecciona una variable a evaluar",options=otra_variable)
+opcion_y=st.sidebar.radio(label="",options=otra_variable)
 
 
 @st.cache
@@ -124,9 +126,6 @@ def plot_simple2(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: 
 plotaño, d = plot_simple2(datoagrupado, opcion_y, "CANTIDAD",  opcion_departamento)
 
 
-
-st.sidebar.markdown("---")
-
 otra_var = list(datoagrupado.columns)
 otra_var.pop(otra_var.index('CANTIDAD'))
 otra_var.pop(otra_var.index('MUNICIPIO'))
@@ -135,7 +134,7 @@ otra_var.pop(otra_var.index('ARMAS MEDIOS'))
 otra_var.pop(otra_var.index('GRUPO ETARIO'))
 otra_var.pop(otra_var.index('AÑO'))
 otra_var.pop(otra_var.index('DIA'))
-opcion_y=st.sidebar.radio(label="selecciona una variable a evaluar",options=otra_var)
+opcion_y=st.sidebar.radio(label=" ",options=otra_var)
 
 
 @st.cache
@@ -156,7 +155,7 @@ otra_va.pop(otra_va.index('GRUPO ETARIO'))
 otra_va.pop(otra_va.index('AÑO'))
 otra_va.pop(otra_va.index('MES'))
 
-opcion_y=st.sidebar.radio(label="selecciona una variable a evaluar",options=otra_va)
+opcion_y=st.sidebar.radio(label="  ",options=otra_va)
 
 
 @st.cache
@@ -191,8 +190,8 @@ otra_var_año.pop(otra_var_año.index('GENERO'))
 otra_var_año.pop(otra_var_año.index('ARMAS MEDIOS'))
 otra_var_año.pop(otra_var_año.index('GRUPO ETARIO'))
 otra_var_año.pop(otra_var_año.index('AÑO'))
-otra_var_año.pop(otra_var_año.index('DIA'))
-opcion_y=st.radio(label="selecciona una mes a evaluar",options=otra_var_año)
+
+opcion_y=st.radio(label="     ",options=otra_var_año)
 
 
 @st.cache
@@ -208,12 +207,6 @@ st.plotly_chart(plot_date_año,use_container_width=True)
 
 
 
-
-
-
-st.markdown("*Lista de casos de acuerdo al AÑO*")
-lista_año = list(departamento_df['AÑO'].unique())
-opcion_año = st.selectbox(label= "selecciona un año A EVALUAR", options= lista_año)
 col1, col2, col3 =st.columns(3)
 with col1:
     otra_pie_año = list(datoagrupado.columns)
