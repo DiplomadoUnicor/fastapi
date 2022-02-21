@@ -21,7 +21,7 @@ st.sidebar.markdown("---")
 df=cargar_datos()
 st.dataframe(df)
 
-melted_asdate = df
+melted_asdate = df.copy()
 
 melted_asdate['FECHA HECHO']= pd.to_datetime(melted_asdate['FECHA HECHO'])
 melted_asdate['AÑO']= melted_asdate['FECHA HECHO'].apply(lambda x: x.year)
@@ -121,7 +121,7 @@ def plot_simple2(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: 
     data = data[data["MUNICIPIO"] == sales_filter]
     fig = px.bar(data, x=x, y=y, color=opcion_y, title=opcion_y)
     return fig, data 
-plo, d = plot_simple2(datoagrupado, opcion_y, "CANTIDAD",  opcion_departamento)
+plotaño, d = plot_simple2(datoagrupado, opcion_y, "CANTIDAD",  opcion_departamento)
 
 
 
@@ -144,7 +144,7 @@ def plot_simple3(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: 
     data = data[data["MUNICIPIO"] == sales_filter]
     fig = px.bar(data, x=x, y=y, color=opcion_y, title=opcion_y)
     return fig, data 
-plot3, d = plot_simple3(datoagrupado, opcion_y, "CANTIDAD",  opcion_departamento)
+plotmes, d = plot_simple3(datoagrupado, opcion_y, "CANTIDAD",  opcion_departamento)
 
 
 otra_va = list(datoagrupado.columns)
@@ -165,19 +165,107 @@ def plot_simple4(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: 
     data = data[data["MUNICIPIO"] == sales_filter]
     fig = px.bar(data, x=x, y=y, color=opcion_y, title=opcion_y)
     return fig, data 
-plot4, d = plot_simple4(datoagrupado, opcion_y, "CANTIDAD",  opcion_departamento)
+plotdia, d = plot_simple4(datoagrupado, opcion_y, "CANTIDAD",  opcion_departamento)
 
-
-
-col1, col2, col3 = st.columns(3)
+st.markdown("---")
+st.markdown("## *Grafico general de los departamentos y municipios con base en los casos presentes*")
+col1, col2,  = st.columns(2)
 with col1:
-    st.plotly_chart(plo,use_container_width=True)
+    st.plotly_chart(plotdia,use_container_width=True)    
 with col2:
-    st.plotly_chart(plot3,use_container_width=True)
+    st.plotly_chart(plotmes,use_container_width=True)
+
+
+st.plotly_chart(plotaño,use_container_width=True)
+
+st.markdown("---")
+
+lista_año = list(departamento_df['AÑO'].unique())
+st.markdown("*Lista de casos de acuerdo al AÑO*")
+opcion_año = st.selectbox(label= "selecciona un año", options= lista_año)
+
+otra_var_año = list(datoagrupado.columns)
+otra_var_año.pop(otra_var_año.index('CANTIDAD'))
+otra_var_año.pop(otra_var_año.index('MUNICIPIO'))
+otra_var_año.pop(otra_var_año.index('GENERO'))
+otra_var_año.pop(otra_var_año.index('ARMAS MEDIOS'))
+otra_var_año.pop(otra_var_año.index('GRUPO ETARIO'))
+otra_var_año.pop(otra_var_año.index('AÑO'))
+otra_var_año.pop(otra_var_año.index('DIA'))
+opcion_y=st.radio(label="selecciona una mes a evaluar",options=otra_var_año)
+
+
+@st.cache
+def plot_simple5(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: str):
+    data = melted_asdate.copy()
+    data = data[data["AÑO"] == sales_filter]
+    fig = px.box(data, x=x, y=y, color=opcion_y, title=f"Casos del {opcion_y}")
+    return fig, data 
+plot_date_año, d = plot_simple5(datoagrupado, opcion_y, "CANTIDAD",  opcion_año)
+
+st.plotly_chart(plot_date_año,use_container_width=True)
+
+
+
+
+
+
+
+st.markdown("*Lista de casos de acuerdo al AÑO*")
+lista_año = list(departamento_df['AÑO'].unique())
+opcion_año = st.selectbox(label= "selecciona un año A EVALUAR", options= lista_año)
+col1, col2, col3 =st.columns(3)
+with col1:
+    otra_pie_año = list(datoagrupado.columns)
+    otra_pie_año.pop(otra_pie_año.index('CANTIDAD'))
+    otra_pie_año.pop(otra_pie_año.index('MUNICIPIO'))
+    otra_pie_año.pop(otra_pie_año.index('GENERO'))
+    otra_pie_año.pop(otra_pie_año.index('GRUPO ETARIO'))
+    otra_pie_año.pop(otra_pie_año.index('AÑO'))
+    otra_pie_año.pop(otra_pie_año.index('DIA'))
+    otra_pie_año.pop(otra_pie_año.index('MES'))
+    opcion_y=st.radio(label="",options=otra_pie_año)
+    @st.cache
+    def pie_simple(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, añofiltro: str):
+        data = melted_asdate.copy()
+        data = data[data["AÑO"] == añofiltro]
+        fig = px.pie(data, values=x, names=y)
+        return fig, data
+    plotpie, c = pie_simple(datoagrupado, "CANTIDAD", opcion_y, opcion_año)
+    st.plotly_chart(plotpie,use_container_width=True)
+with col2:
+    otra_pie_genero = list(datoagrupado.columns)
+    otra_pie_genero.pop(otra_pie_genero.index('CANTIDAD'))
+    otra_pie_genero.pop(otra_pie_genero.index('MUNICIPIO'))
+    otra_pie_genero.pop(otra_pie_genero.index('ARMAS MEDIOS'))
+    otra_pie_genero.pop(otra_pie_genero.index('GRUPO ETARIO'))
+    otra_pie_genero.pop(otra_pie_genero.index('AÑO'))
+    otra_pie_genero.pop(otra_pie_genero.index('DIA'))
+    otra_pie_genero.pop(otra_pie_genero.index('MES'))
+    opcion_y=st.radio(label="",options=otra_pie_genero)
+    @st.cache
+    def pie_simple(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, generofiltro: str):
+        data = melted_asdate.copy()
+        data = data[data["AÑO"] == generofiltro]
+        fig = px.pie(data, values=x, names=y)
+        return fig, data
+    plotpiegenero, c = pie_simple(datoagrupado, "CANTIDAD", opcion_y, opcion_año)
+    st.plotly_chart(plotpiegenero, use_container_width=True)
 with col3:
-    st.plotly_chart(plot4,use_container_width=True)
-
-
-
-
-
+    otra_pie_grupo = list(datoagrupado.columns)
+    otra_pie_grupo.pop(otra_pie_grupo.index('CANTIDAD'))
+    otra_pie_grupo.pop(otra_pie_grupo.index('MUNICIPIO'))
+    otra_pie_grupo.pop(otra_pie_grupo.index('ARMAS MEDIOS'))
+    otra_pie_grupo.pop(otra_pie_grupo.index('GENERO'))
+    otra_pie_grupo.pop(otra_pie_grupo.index('AÑO'))
+    otra_pie_grupo.pop(otra_pie_grupo.index('DIA'))
+    otra_pie_grupo.pop(otra_pie_grupo.index('MES'))
+    opcion_y=st.radio(label="",options=otra_pie_grupo)
+    @st.cache
+    def pie_simple(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, generofiltro: str):
+        data = melted_asdate.copy()
+        data = data[data["AÑO"] == generofiltro]
+        fig = px.pie(data, values=x, names=y)
+        return fig, data
+    plotpiegerupo, c = pie_simple(datoagrupado, "CANTIDAD", opcion_y, opcion_año)
+    st.plotly_chart(plotpiegerupo, use_container_width=True)
