@@ -10,6 +10,7 @@ import plotly.graph_objects as go
 # swifter para apply lambda
 
 st.set_page_config(layout = "wide")
+st.title('Violencia intrafamiliar en colombia')
 
 @st.cache
 def cargar_datos():
