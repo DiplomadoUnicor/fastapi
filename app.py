@@ -95,7 +95,7 @@ col1, col2 = st.columns(2)
 def plot_simple(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: str):
     data = melted_asdate.copy()
     data = data[data["MUNICIPIO"] == sales_filter]
-    fig = px.histogram(data, x=x, y=y, color=opcion_y, title=opcion_y)
+    fig = px.histogram(data, x=x, y=y, color=opcion_y, title=opcion_y, color_discrete_sequence=px.colors.sequential.Plasma)
     return fig, data 
 plot, d = plot_simple(datoagrupado, opcion_y, "CANTIDAD",  opcion_departamento)
 with col1: 
@@ -122,10 +122,9 @@ opcion_y=st.sidebar.radio(label="",options=otra_variable)
 def plot_simple2(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: str):
     data = melted_asdate.copy()
     data = data[data["MUNICIPIO"] == sales_filter]
-    fig = px.bar(data, x=x, y=y, color=opcion_y, title=opcion_y)
+    fig = px.bar(data, x=x, y=y, color_discrete_sequence=px.colors.sequential.Blues, title=opcion_y)
     return fig, data 
 plotaño, d = plot_simple2(datoagrupado, opcion_y, "CANTIDAD",  opcion_departamento)
-
 
 otra_var = list(datoagrupado.columns)
 otra_var.pop(otra_var.index('CANTIDAD'))
@@ -142,7 +141,7 @@ opcion_y=st.sidebar.radio(label=" ",options=otra_var)
 def plot_simple3(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: str):
     data = melted_asdate.copy()
     data = data[data["MUNICIPIO"] == sales_filter]
-    fig = px.bar(data, x=x, y=y, color=opcion_y, title=opcion_y)
+    fig = px.bar(data, x=x, y=y, color_discrete_sequence=px.colors.sequential.RdBu, title=opcion_y)
     return fig, data 
 plotmes, d = plot_simple3(datoagrupado, opcion_y, "CANTIDAD",  opcion_departamento)
 
@@ -163,7 +162,7 @@ opcion_y=st.sidebar.radio(label="  ",options=otra_va)
 def plot_simple4(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: str):
     data = melted_asdate.copy()
     data = data[data["MUNICIPIO"] == sales_filter]
-    fig = px.bar(data, x=x, y=y, color=opcion_y, title=opcion_y)
+    fig = px.bar(data, x=x, y=y, color_discrete_sequence=px.colors.sequential.Plasma, title=opcion_y)
     return fig, data 
 plotdia, d = plot_simple4(datoagrupado, opcion_y, "CANTIDAD",  opcion_departamento)
 
@@ -199,7 +198,8 @@ opcion_y=st.radio(label="     ",options=otra_var_año)
 def plot_simple5(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: str):
     data = melted_asdate.copy()
     data = data[data["AÑO"] == sales_filter]
-    fig = px.box(data, x=x, y=y, color=opcion_y, title=f"Casos del {opcion_y}")
+    fig = px.box(data, x=x, y=y, color=opcion_y, title=f"Casos del {opcion_y}",color_discrete_sequence=px.colors.sequential.Plasma)
+    
     return fig, data 
 plot_date_año, d = plot_simple5(datoagrupado, opcion_y, "CANTIDAD",  opcion_año)
 
@@ -223,7 +223,8 @@ with col1:
     def pie_simple(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, añofiltro: str):
         data = melted_asdate.copy()
         data = data[data["AÑO"] == añofiltro]
-        fig = px.pie(data, values=x, names=y)
+        #fig = px.pie(data, values=x, names=y)
+        fig = px.pie(data, values=x, names=y, color_discrete_sequence=px.colors.sequential.RdBu)
         return fig, data
     plotpie, c = pie_simple(datoagrupado, "CANTIDAD", opcion_y, opcion_año)
     st.plotly_chart(plotpie,use_container_width=True)
@@ -241,7 +242,8 @@ with col2:
     def pie_simple(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, generofiltro: str):
         data = melted_asdate.copy()
         data = data[data["AÑO"] == generofiltro]
-        fig = px.pie(data, values=x, names=y)
+        #fig = px.pie(data, values=x, names=y)
+        fig = px.pie(data, values=x, names=y, color_discrete_sequence=px.colors.sequential.RdBu)
         return fig, data
     plotpiegenero, c = pie_simple(datoagrupado, "CANTIDAD", opcion_y, opcion_año)
     st.plotly_chart(plotpiegenero, use_container_width=True)
@@ -259,7 +261,8 @@ with col3:
     def pie_simple(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, generofiltro: str):
         data = melted_asdate.copy()
         data = data[data["AÑO"] == generofiltro]
-        fig = px.pie(data, values=x, names=y)
+        #fig = px.pie(data, values=x, names=y)
+        fig = px.pie(data, values=x, names=y, color_discrete_sequence=px.colors.sequential.RdBu)
         return fig, data
     plotpiegerupo, c = pie_simple(datoagrupado, "CANTIDAD", opcion_y, opcion_año)
     st.plotly_chart(plotpiegerupo, use_container_width=True)
