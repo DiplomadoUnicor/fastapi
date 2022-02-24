@@ -62,9 +62,7 @@ datoagrupado = melted_asdate[['MUNICIPIO', 'ARMAS MEDIOS','GENERO', 'GRUPO ETARI
 lista_Municipio_por_departamentos = list(departamento_df['MUNICIPIO'].unique())
 st.sidebar.markdown("*Lista de casos de acuerdo al municipio*")
 opcion_municipio = st.sidebar.selectbox(label= "selecciona un municipio", options= lista_Municipio_por_departamentos)
-# lista_mes = list(año_df['MES'].unique())
-# st.sidebar.markdown("*Lista de casos de acuerdo al MES*")
-#opcion_mes = st.sidebar.selectbox(label= "selecciona un mes", options= lista_mes)
+
 ######################################3
 
 
