@@ -17,7 +17,7 @@ python -m virtualenv env
 ```
 activamos el entorno virtual 
 ```sh
-env/Script/activate
+env/Scripts/activate
 ```
 instalamos las dependencias
 ```sh

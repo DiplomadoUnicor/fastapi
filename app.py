@@ -4,6 +4,7 @@ import plotly.express as px
 import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import requests
 
 # swifter para apply lambda
 
@@ -45,11 +46,11 @@ st.markdown("---")
 
 ## seleccionamos un departamento para empezar a evaluar los datos
 st.sidebar.markdown("### **Seleccionar Departamento:**")
-##########################################3
+##########################################
  # los departamentos estan agrupado de acuerdo a la cantidad
 sorted_departamento = melted_asdate.groupby('DEPARTAMENTO')['CANTIDAD'].count().sort_values(ascending=True).copy().index
-select_departamento = []
-select_departamento.append(st.sidebar.selectbox('', sorted_departamento))
+select_departamento = ['CÓRDOBA']
+select_departamento.append(st.sidebar.selectbox('', sorted_departamento[18:]))
 #######################################
 departamento_df = melted_asdate[melted_asdate['DEPARTAMENTO'].isin(select_departamento)].copy()
 #####################################################3
@@ -139,12 +140,12 @@ otra_variable.pop(otra_variable.index('DIA'))
 opcion_y=st.sidebar.radio(label="",options=otra_variable)
 
 
-#grafica genero de acuerdo a los año
+#grafica general de acuerdo a los año
 @st.cache
 def plot_general_date(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: str):
     data = melted_asdate.copy()
     data = data[data["MUNICIPIO"] == sales_filter]
-    fig = px.histogram(data,  opcion_y, 'CANTIDAD',   title=opcion_y,color_discrete_sequence=px.colors.sequential.Plasma)
+    fig = px.histogram(data,  opcion_y, 'CANTIDAD',   title= f"{opcion_y}",color_discrete_sequence=px.colors.sequential.Plasma)
     # color_discrete_sequence=px.colors.sequential.Plasma,
     return fig, data 
 plotaño, d = plot_general_date(datoagrupado, opcion_y, "CANTIDAD",  opcion_municipio)
@@ -208,7 +209,7 @@ with col2:
 st.plotly_chart(plotaño,use_container_width=True)
 
 st.markdown("---")
-
+####################################################################################33
 lista_año = list(departamento_df['AÑO'].unique())
 st.markdown("*Lista de casos de acuerdo al AÑO*")
 opcion_año = st.selectbox(label= "selecciona un año", options= lista_año)
@@ -228,7 +229,7 @@ opcion_y=st.radio(label="     ",options=otra_var_año)
 def plot_simple5(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: str):
     data = melted_asdate.copy()
     data = data[data["AÑO"] == sales_filter]
-    fig = px.histogram(data, x=x, y=y, color=opcion_y, title=f"Casos del {opcion_y}",color_discrete_sequence=px.colors.sequential.Plasma)
+    fig = px.histogram(data, x=x, y=y, color=opcion_y, title=f"Casos del  {opcion_y}",color_discrete_sequence=px.colors.sequential.Plasma)
     
     return fig, data 
 plot_date_año, d = plot_simple5(datoagrupado, opcion_y,  "CANTIDAD",  opcion_año)
@@ -295,3 +296,54 @@ with col3:
         return fig, data
     plotpiegerupo, c = pie_simple(datoagrupado, "CANTIDAD", opcion_y, opcion_año)
     st.plotly_chart(plotpiegerupo, use_container_width=True)
+
+
+
+st.markdown("---")
+###################################################################333
+
+col1, col2 = st.columns(2)
+
+with col1:
+    listar_armas = list(datoagrupado['ARMAS MEDIOS'].unique())
+    armas = st.selectbox(label= "selecciona un ARMA", options= listar_armas)
+    # año = st.slider(
+    #     label = "AÑO", min_value=2010, max_value=2021)
+    mes = st.slider(
+        label="MES", min_value=1, max_value=12, value=1
+    )
+    mes = st.slider(
+        label="DIA", min_value=1, max_value=31, value=1
+    )
+    lista_genero = list(datoagrupado['GENERO'].unique())
+    opcion_genero = st.selectbox(label= "selecciona un GENERO", options= lista_genero)
+
+    lista_grupo = list(datoagrupado['GRUPO ETARIO'].unique())
+    opcion_grupo = st.selectbox(label= "selecciona un GRUPO", options= lista_grupo)
+    st.sidebar.markdown("---")
+
+request_data = [
+    {
+        "DEPARTAMENTO": departamento_df,
+        "MUNICIPIO": opcion_municipio,
+        "ARMAS_MEDIOS": armas,
+        "AÑO": opcion_año,
+        "MES": mes,
+        "DIA": mes,
+        "GENERO": opcion_genero,
+        "GRUPO_ETARIO": opcion_grupo
+        
+    }
+]
+
+url_api = "http://127.0.0.1:8000/predict"
+data = str(request_data).replace("'", '"')
+prediccion = requests.post(url=url_api, data=data).text
+st.sidebar.markdown("---")
+
+with col2:
+    st.write(
+    # value=f'{pd.read_json(prediccion)[["CANTIDAD"]]}',
+    # label="Prediccion de precio de salidad para el año: ",
+         )
+
