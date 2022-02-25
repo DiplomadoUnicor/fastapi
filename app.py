@@ -49,10 +49,11 @@ st.sidebar.markdown("### **Seleccionar Departamento:**")
 ##########################################
  # los departamentos estan agrupado de acuerdo a la cantidad
 sorted_departamento = melted_asdate.groupby('DEPARTAMENTO')['CANTIDAD'].count().sort_values(ascending=True).copy().index
-select_departamento = ['CÓRDOBA']
-select_departamento.append(st.sidebar.selectbox('', sorted_departamento[18:]))
+select_departamento =st.sidebar.selectbox('', sorted_departamento[18:])
+
+#select_departamento = []
 #######################################
-departamento_df = melted_asdate[melted_asdate['DEPARTAMENTO'].isin(select_departamento)].copy()
+departamento_df = melted_asdate[melted_asdate['DEPARTAMENTO'].isin([select_departamento])].copy()
 #####################################################3
 #datos_agrupados = df[['MUNICIPIO', 'ARMAS MEDIOS','GENERO', 'GRUPO ETARIO', 'CANTIDAD']].copy()
 ## agrupamos nuestro datos de la siguiente forma
@@ -304,47 +305,55 @@ st.markdown("---")
 
 col1, col2 = st.columns(2)
 
-# with col1:
-#     listar_armas = list(datoagrupado['ARMAS MEDIOS'].unique())
-#     armas = st.selectbox(label= "selecciona un ARMA", options= listar_armas)
-#     año = st.slider(
-#         label = "AÑO", min_value=2010, max_value=2021)
-#     mes = st.slider(
-#         label="MES", min_value=1, max_value=12, value=1
-#     )
-#     mes = st.slider(
-#         label="DIA", min_value=1, max_value=31, value=1
-#     )
-#     lista_genero = list(datoagrupado['GENERO'].unique())
-#     opcion_genero = st.selectbox(label= "selecciona un GENERO", options= lista_genero)
+with col1:
 
-#     lista_grupo = list(datoagrupado['GRUPO ETARIO'].unique())
-#     opcion_grupo = st.selectbox(label= "selecciona un GRUPO", options= lista_grupo)
-#     st.sidebar.markdown("---")
+    
 
-# request_data = [
-#     {
-#         "DEPARTAMENTO": departamento_df,
-#         "MUNICIPIO": opcion_municipio,
-#         "ARMAS_MEDIOS": armas,
-#         "AÑO": opcion_año,
-#         "MES": mes,
-#         "DIA": mes,
-#         "GENERO": opcion_genero,
-#         "GRUPO_ETARIO": opcion_grupo
+    listar_armas = list(datoagrupado['ARMAS MEDIOS'].unique())
+    armas = st.selectbox(label= "selecciona un ARMA", options= listar_armas)
+    año = st.slider(
+        label = "AÑO", min_value=2010, max_value=2021)
+    mes = st.slider(
+        label="MES", min_value=1, max_value=12, value=1
+    )
+    dia = st.slider(
+        label="DIA", min_value=1, max_value=31, value=1
+    )
+    lista_genero = list(datoagrupado['GENERO'].unique())
+    opcion_genero = st.selectbox(label= "selecciona un GENERO", options= lista_genero)
+
+    lista_grupo = list(datoagrupado['GRUPO ETARIO'].unique())
+    opcion_grupo = st.selectbox(label= "selecciona un GRUPO", options= lista_grupo)
+    st.sidebar.markdown("---")
+
+request_data = [
+    {
+        "DEPARTAMENTO": select_departamento,
+        "MUNICIPIO": opcion_municipio,
+        "ARMAS_MEDIOS": armas,
+        "AÑO": año,
+        "MES": mes,
+        "DIA": dia,
+        "GENERO": opcion_genero,
+        "GRUPO_ETARIO": opcion_grupo
         
-#     }
-# ]
+    }
+]
 
-# url_api = "http://127.0.0.1:8000/predict"
-# url_api = "https://machinelearapi.herokuapp.com/predict"
-# data = str(request_data).replace("'", '"')
-# prediccion = requests.post(url=url_api, data=data).text
-# st.sidebar.markdown("---")
+#url_api = "http://127.0.0.1:8000/predict"
+#https://machinelearapi.herokuapp.com/predict
+url_api = "https://machinelearapi.herokuapp.com/predict"
+data_result = str(request_data).replace("'", '"')
+prediccion = requests.post(url=url_api, data=data_result).text
+st.sidebar.markdown("---")
+st.write(request_data)
+st.write(requests.post(url=url_api, data=data_result))
+with col2:
+    st.write(
+        
+    value=f'{pd.read_json(prediccion)["CANTIDAD"][0]}',
+    label="Prediccion de precio de salidad para el año: ",
+    )
+    
 
-# with col2:
-#     st.write(
-#     value=f'{pd.read_json(prediccion)[["CANTIDAD"]]}',
-#     label="Prediccion de precio de salidad para el año: ",
-#     )
 
