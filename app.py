@@ -1,3 +1,4 @@
+from matplotlib.font_manager import json_dump
 import streamlit as st
 import pandas as pd
 import plotly.express as px 
@@ -131,14 +132,15 @@ with col2:
 st.sidebar.markdown("---")
 
 otra_variable = list(datoagrupado.columns)
-otra_variable.pop(otra_variable.index('CANTIDAD'))
-otra_variable.pop(otra_variable.index('MUNICIPIO'))
-otra_variable.pop(otra_variable.index('GENERO'))
-otra_variable.pop(otra_variable.index('ARMAS MEDIOS'))
-otra_variable.pop(otra_variable.index('GRUPO ETARIO'))
-otra_variable.pop(otra_variable.index('MES'))
-otra_variable.pop(otra_variable.index('DIA'))
-opcion_y=st.sidebar.radio(label="",options=otra_variable)
+# otra_variable.pop(otra_variable.index('CANTIDAD'))
+# otra_variable.pop(otra_variable.index('MUNICIPIO'))
+# otra_variable.pop(otra_variable.index('GENERO'))
+# otra_variable.pop(otra_variable.index('ARMAS MEDIOS'))
+# otra_variable.pop(otra_variable.index('GRUPO ETARIO'))
+# otra_variable.pop(otra_variable.index('MES'))
+# otra_variable.pop(otra_variable.index('DIA'))
+opcion_y= "AÑO"
+#st.sidebar.radio(label="",options=otra_variable)
 
 
 #grafica general de acuerdo a los año
@@ -146,7 +148,9 @@ opcion_y=st.sidebar.radio(label="",options=otra_variable)
 def plot_general_date(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: str):
     data = melted_asdate.copy()
     data = data[data["MUNICIPIO"] == sales_filter]
-    fig = px.histogram(data,  opcion_y, 'CANTIDAD',   title= f"{opcion_y}",color_discrete_sequence=px.colors.sequential.Plasma)
+    fig = px.histogram(data,  opcion_y,    title= f"{opcion_y}",color_discrete_sequence=px.colors.sequential.Plasma)
+    fig.update_yaxes(title_text="CANTIDAD")
+
     # color_discrete_sequence=px.colors.sequential.Plasma,
     return fig, data 
 plotaño, d = plot_general_date(datoagrupado, opcion_y, "CANTIDAD",  opcion_municipio)
@@ -171,6 +175,7 @@ def plot_mes_data(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter:
     data = melted_asdate.copy()
     data = data[data["MUNICIPIO"] == sales_filter]
     fig = px.histogram(data, x=x, y=y, color_discrete_sequence=px.colors.sequential.Plasma, title=opcion_y)
+    fig.update_yaxes(title_text="CANTIDAD")
     return fig, data 
 plotmes, d = plot_mes_data(datoagrupado, opcion_y, "CANTIDAD",  opcion_municipio)
 
@@ -230,7 +235,7 @@ opcion_y=st.radio(label="     ",options=otra_var_año)
 def plot_simple5(melted_asdate: pd.DataFrame, x: pd.DataFrame, y, sales_filter: str):
     data = melted_asdate.copy()
     data = data[data["AÑO"] == sales_filter]
-    fig = px.histogram(data, x=x, y=y, color=opcion_y, title=f"Casos del  {opcion_y}",color_discrete_sequence=px.colors.sequential.Plasma)
+    fig = px.histogram(data, x=x, y=y, title=f"Casos del  {opcion_y}",color_discrete_sequence=px.colors.sequential.Plasma)
     
     return fig, data 
 plot_date_año, d = plot_simple5(datoagrupado, opcion_y,  "CANTIDAD",  opcion_año)
@@ -339,20 +344,19 @@ request_data = [
         
     }
 ]
-
-#url_api = "http://127.0.0.1:8000/predict"
-#https://machinelearapi.herokuapp.com/predict
+import json 
+#url_api = "http://127.0.0.1:8000/predict"https://machinelearapi.herokuapp.com/predict
 url_api = "https://machinelearapi.herokuapp.com/predict"
-data_result = str(request_data).replace("'", '"')
+#data_result = str(request_data).replace("'", '"')
+data_result = json.dumps(request_data)
 prediccion = requests.post(url=url_api, data=data_result).text
 st.sidebar.markdown("---")
-st.write(request_data)
-st.write(requests.post(url=url_api, data=data_result))
-with col2:
-    st.write(
-        
+#st.write(request_data)
+#st.write(requests.post(url=url_api, data=data_result))
+#st.write(prediccion)
+col2.metric(        
     value=f'{pd.read_json(prediccion)["CANTIDAD"][0]}',
-    label="Prediccion de precio de salidad para el año: ",
+    label=" hola pongo un texto mas bonito aqui: ",
     )
     
 
