@@ -302,13 +302,13 @@ with col3:
 st.markdown("---")
 ###################################################################333
 
-# col1, col2 = st.columns(2)
+col1, col2 = st.columns(2)
 
 # with col1:
 #     listar_armas = list(datoagrupado['ARMAS MEDIOS'].unique())
 #     armas = st.selectbox(label= "selecciona un ARMA", options= listar_armas)
-#     # año = st.slider(
-#     #     label = "AÑO", min_value=2010, max_value=2021)
+#     año = st.slider(
+#         label = "AÑO", min_value=2010, max_value=2021)
 #     mes = st.slider(
 #         label="MES", min_value=1, max_value=12, value=1
 #     )
@@ -337,13 +337,14 @@ st.markdown("---")
 # ]
 
 # url_api = "http://127.0.0.1:8000/predict"
+# url_api = "https://machinelearapi.herokuapp.com/predict"
 # data = str(request_data).replace("'", '"')
 # prediccion = requests.post(url=url_api, data=data).text
 # st.sidebar.markdown("---")
 
 # with col2:
 #     st.write(
-#     # value=f'{pd.read_json(prediccion)[["CANTIDAD"]]}',
-#     # label="Prediccion de precio de salidad para el año: ",
-#          )
+#     value=f'{pd.read_json(prediccion)[["CANTIDAD"]]}',
+#     label="Prediccion de precio de salidad para el año: ",
+#     )
 
