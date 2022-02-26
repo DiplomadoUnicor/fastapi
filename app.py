@@ -265,7 +265,7 @@ request_data = [
     }
 ]
 import json 
-url_api = "https://machinelearapi.herokuapp.com/predict"
+url_api = "https://apilearndiplomado.herokuapp.com/predict"
 data_result = json.dumps(request_data)
 prediccion = requests.post(url=url_api, data=data_result).text
 st.sidebar.markdown("---")
